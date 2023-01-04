@@ -2,17 +2,16 @@
 #But, they are not working at the same time.
 #I coudn't find a solution to "GET" jwt token data from HTML side.
 
-from flask import Flask, render_template, request, redirect, url_for, jsonify, make_response 
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash,check_password_hash
+from models import User, Urls
+from sqlalchemy.exc import IntegrityError
 import bcrypt
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from db import db
 import random
 import string
-from functools import wraps
-from models import User, Urls
-from sqlalchemy.exc import IntegrityError
+
 
 app = Flask(__name__)
                     #db configuration
@@ -35,7 +34,7 @@ def shorten_url():
     while True:
         rand_letters = random.choices(letters, k=3)
         rand_letters = "".join(rand_letters)
-        short_url = Urls.query.filter_by(short=rand_letters).first()            #check shortened url in db
+        short_url = Urls.query.filter_by(short=rand_letters).first()            
         if not short_url:
             return rand_letters
             
